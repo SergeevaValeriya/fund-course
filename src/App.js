@@ -10,6 +10,7 @@ import MyButton from "./components/UI/button/MyButton";
 import PostService from "./API/PostService";
 import Loader from "./components/UI/loader/Loader";
 import {getPageCount, getPagesArray} from "./utils/pages";
+import Pagination from "./components/UI/pagination/Pagination";
 
 
 function App() {
@@ -27,8 +28,6 @@ function App() {
         const totalCount = response.headers['x-total-count'];
         setTotalPages(getPageCount(totalCount, limit));
     });
-
-    let pagesArray = getPagesArray(totalPages);
 
     useEffect(() => {
         fetchPosts(limit, page)
@@ -68,16 +67,11 @@ function App() {
             ? <div style={{display: 'flex', justifyContent: 'center', marginTop: '50px'}}><Loader /></div>
             : <PostsList remove={removePost} posts={sortedAndSearchedPosts} title="Posts List" />
         }
-        <div className="page__wrapper">
-        {pagesArray.map(p =>
-            <span
-                onClick={() => changePage(p)}
-                key={p}
-                className={page === p ? 'page page__current' : 'page'}>
-                {p}
-            </span>
-        )}
-        </div>
+        <Pagination
+            page={page}
+            changePage={changePage}
+            totalPages={totalPages}
+        />
     </div>
     );
 };
